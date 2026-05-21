@@ -8,19 +8,18 @@ RUN apk add --no-cache tzdata supervisor sed curl && \
     curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared && \
     chmod +x /usr/local/bin/cloudflared
 
-# 创建配置文件存放目录
-RUN mkdir -p /etc/sing-box /etc/supervisor/conf.d /var/log
+# 创建必要的目录
+RUN mkdir -p /app /etc/supervisor/conf.d /var/log
 
-# 将本地的配置复制到容器对应路径
-COPY config.json /etc/sing-box/config.json
+# 将本地配置复制到容器（完美对齐到 /app 目录）
+COPY config.json /app/config.json
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # 引入核心注入脚本，赋予最高执行权限
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# 暴露端口（Koyeb 默认探测端口）
+# 暴露端口
 EXPOSE 8080
 
-# 抛弃原有的直接启动，改由我们的安全脚本接管入口
 ENTRYPOINT ["/entrypoint.sh"]
