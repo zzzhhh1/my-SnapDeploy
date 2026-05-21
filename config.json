@@ -17,6 +17,12 @@
         "type": "ws",
         "path": "/?ed=2048"
       }
+    },
+    {
+      "type": "http",
+      "tag": "http-health-in",
+      "listen": "0.0.0.0",
+      "listen_port": 8080
     }
   ],
   "outbounds": [
